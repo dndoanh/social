@@ -19,6 +19,14 @@ class MailTemplate(models.Model):
             if parent is not None:
                 parent.drop_tree()
 
+        link_elements = root.xpath(
+            "//a[contains(@href, 'www.odoo.com')]"
+        )
+        for elem in link_elements:
+            parent = elem.getparent()
+            if parent is not None:
+                parent.drop_tree()
+
         return htmltree.tostring(root).decode("utf-8")
 
     @api.model
