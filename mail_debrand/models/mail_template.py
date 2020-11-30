@@ -10,24 +10,26 @@ class MailTemplate(models.Model):
 
     @api.model
     def _debrand_body(self, html):
-        root = htmltree.fromstring(html)
-        powered_by_elements = root.xpath(
-            "//table//a[contains(@href, 'www.odoo.com')]"
-        )
-        for elem in powered_by_elements:
-            parent = elem.getparent().getparent()
-            if parent is not None:
-                parent.drop_tree()
+        if(html):
+            root = htmltree.fromstring(html)
+            powered_by_elements = root.xpath(
+                "//table//a[contains(@href, 'www.odoo.com')]"
+            )
+            for elem in powered_by_elements:
+                parent = elem.getparent().getparent()
+                if parent is not None:
+                    parent.drop_tree()
 
-        link_elements = root.xpath(
-            "//a[contains(@href, 'www.odoo.com')]"
-        )
-        for elem in link_elements:
-            parent = elem.getparent()
-            if parent is not None:
-                parent.drop_tree()
+            link_elements = root.xpath(
+                "//a[contains(@href, 'www.odoo.com')]"
+            )
+            for elem in link_elements:
+                parent = elem.getparent()
+                if parent is not None:
+                    parent.drop_tree()
 
-        return htmltree.tostring(root).decode("utf-8")
+            return htmltree.tostring(root).decode("utf-8")
+        return html
 
     @api.model
     def render_post_process(self, html):
